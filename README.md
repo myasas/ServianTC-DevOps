@@ -17,11 +17,14 @@ This set up aims to build and deploy Servian's TechChallengeApp to AWS Cloud inf
 - [ ] If you are setting up the database using RDS, do not run the ./TechChallengeApp updatedb command. Instead run ./TechChallengeApp updatedb -s
 
 #### **Prerequisites**
-* Run time environment for make file
 * Terraform
+* AWS Cli 
+* AWS "access key ID", "secret access key" for user with nessasary permissions
+* Run time environment for make file
 
 ## Architecture
-[TBD]
+* Architecture Design Records (ADR) are recorded in  [DesignRecords.md](DesignRecords.md) - this file.
+* Diagram [TBD]
 
 ## Directory Structure
 | Directory                | Purpose/Description                                                                                                                                              |
