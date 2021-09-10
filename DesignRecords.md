@@ -11,6 +11,8 @@
   - [Details](#details-3)
 - [5. Finalize Design decisions  (Network | Resiliency)](#5-finalize-design-decisions--network--resiliency)
   - [Details](#details-4)
+- [6. Finalize Architecture](#6-finalize-architecture)
+  - [Details](#details-5)
 
 # 1. Record architecture decisions
 
@@ -86,3 +88,13 @@ Date: 2020-09-09
 ![Dicision Tree](https://drive.google.com/uc?export=view&id=10uLPwVwVA4BY48C4vVZQNyw_Jl01CH36)
 
 
+# 6. Finalize Architecture
+
+## Details
+
+Date: 2020-09-09
+
+* Drew the architecture for the platform, considering #4 prereqisites and #5 Finalized design decisions.
+* Shown below is the finalized architecture diagram.
+
+![Architecture Diagram](https://drive.google.com/uc?export=view&id=1xOvTEZtwZUWsMoD5IKM7Ah5Vc4VMGmoe)

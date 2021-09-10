@@ -6,7 +6,7 @@ This set up aims to build and deploy Servian's TechChallengeApp to AWS Cloud inf
 
 **Immediate**
 - [x] Used proper Git workflow: [Gitflow Workflow](https://www.atlassian.com/git/tustorials/comparing-workflows/gitflow-workflow)
-- [ ] Prepared level architectural overview of my deployment.
+- [X] Prepared level architectural overview of my deployment.
 
 **Todo**
 - [ ] Security (Network segmentation (if applicable to the implementation), Secret storage, Platform security features)
@@ -24,7 +24,10 @@ This set up aims to build and deploy Servian's TechChallengeApp to AWS Cloud inf
 
 ## Architecture
 * Architecture Design Records (ADR) are recorded in  [DesignRecords.md](DesignRecords.md) - this file.
-* Diagram [TBD]
+* Decision Tree. (More details in )
+![Dicision Tree](https://drive.google.com/uc?export=view&id=10uLPwVwVA4BY48C4vVZQNyw_Jl01CH36)
+* Architecture Diagram. (More details in)
+![Architecture Diagram](https://drive.google.com/uc?export=view&id=1xOvTEZtwZUWsMoD5IKM7Ah5Vc4VMGmoe)
 
 ## Directory Structure
 | Directory                | Purpose/Description                                                                                                                                              |
