@@ -24,9 +24,9 @@ This set up aims to build and deploy Servian's TechChallengeApp to AWS Cloud inf
 
 ## Architecture
 * Architecture Design Records (ADR) are recorded in  [DesignRecords.md](DesignRecords.md) - this file.
-* Decision Tree. (More details in )
+* Decision Tree. (More details in [DesignRecords.md#5-finalize-design-decisions--network--resiliency](DesignRecords.md))
 ![Dicision Tree](https://drive.google.com/uc?export=view&id=10uLPwVwVA4BY48C4vVZQNyw_Jl01CH36)
-* Architecture Diagram. (More details in)
+* Architecture Diagram. (More details in [DesignRecords.md#6-finalize-architecture](DesignRecords.md))
 ![Architecture Diagram](https://drive.google.com/uc?export=view&id=1xOvTEZtwZUWsMoD5IKM7Ah5Vc4VMGmoe)
 
 ## Directory Structure
