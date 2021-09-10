@@ -5,7 +5,7 @@ Introduction
 This set up aims to build and deploy Servian's TechChallengeApp to AWS Cloud infrastructure while adhering to following guidelines. 
 
 **Immediate**
-- [x] Used proper Git workflow: [Gitflow Workflow](https://www.atlassian.com/git/tustorials/comparing-workflows/gitflow-workflow)
+- [x] Used proper Git workflow: [Gitflow Workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
 - [X] Prepared level architectural overview of my deployment.
 
 **Todo**
