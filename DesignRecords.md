@@ -85,7 +85,7 @@ Date: 2020-09-09
 * Decided systems marked in Amber. 
 * Reasonings given with text highlighted in yellow.
 
-![Dicision Tree](https://drive.google.com/uc?export=view&id=10uLPwVwVA4BY48C4vVZQNyw_Jl01CH36)
+![Dicision Tree](https://drive.google.com/uc?export=view&id=1rIwPT1eiqitH_zlGjG48x0JhVPLbRKvu)
 
 
 # 6. Finalize Architecture
@@ -97,4 +97,4 @@ Date: 2020-09-09
 * Drew the architecture for the platform, considering #4 prereqisites and #5 Finalized design decisions.
 * Shown below is the finalized architecture diagram.
 
-![Architecture Diagram](https://drive.google.com/uc?export=view&id=1xOvTEZtwZUWsMoD5IKM7Ah5Vc4VMGmoe)
+![Architecture Diagram](https://drive.google.com/uc?export=view&id=1Alyc_8pXIag2RCma3BkUI7tkGjUi6wor)

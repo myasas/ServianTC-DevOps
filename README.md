@@ -21,13 +21,14 @@ This set up aims to build and deploy Servian's TechChallengeApp to AWS Cloud inf
 * AWS Cli 
 * AWS "access key ID", "secret access key" for user with nessasary permissions
 * Run time environment for make file
+* Prepare s3 bucket with neccessary permissions to act as Terraforms state bucket
 
 ## Architecture
 * Architecture Design Records (ADR) are recorded in  [DesignRecords.md](DesignRecords.md) - this file.
 * **Decision Tree.** (More details in [DesignRecords.md#5-finalize-design-decisions--network--resiliency](DesignRecords.md))
-![Dicision Tree](https://drive.google.com/uc?export=view&id=10uLPwVwVA4BY48C4vVZQNyw_Jl01CH36)
+![Dicision Tree](https://drive.google.com/uc?export=view&id=1rIwPT1eiqitH_zlGjG48x0JhVPLbRKvu)
 * **Architecture Diagram.** (More details in [DesignRecords.md#6-finalize-architecture](DesignRecords.md))
-![Architecture Diagram](https://drive.google.com/uc?export=view&id=1xOvTEZtwZUWsMoD5IKM7Ah5Vc4VMGmoe)
+![Architecture Diagram](https://drive.google.com/uc?export=view&id=1Alyc_8pXIag2RCma3BkUI7tkGjUi6wor)
 
 ## Directory Structure
 | Directory                | Purpose/Description                                                                                                                                              |
