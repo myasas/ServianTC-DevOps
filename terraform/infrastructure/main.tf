@@ -53,3 +53,19 @@ module "bastion" {
 
   bastion_allowed_port = var.bastion_allowed_port
 }
+
+
+module "storage" {
+  source = "./modules/storage"
+
+  short_name   = var.short_name
+  default_tags = var.default_tags
+
+  vpc_id                 = module.network.vpc_id
+  vpc_az_size            = var.vpc_az_size
+  vpc_subnet_storage_ids = module.network.vpc_subnet_storage_ids
+
+  storage_instance_class = var.storage_instance_class
+
+  security_group_storage_id = module.security.security_group_storage_id
+}
