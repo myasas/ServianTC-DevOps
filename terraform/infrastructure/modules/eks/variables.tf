@@ -24,3 +24,11 @@ variable "security_group_bastion_id" {
 
 variable "security_group_front_id" {
 }
+
+variable "eks_arn_user_list_with_masters_role" {
+  type = list(string)
+}
+
+variable "eks_arn_user_list_with_readonly_role" {
+  type = list(string)
+}
