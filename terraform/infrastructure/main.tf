@@ -69,3 +69,21 @@ module "storage" {
 
   security_group_storage_id = module.security.security_group_storage_id
 }
+
+
+module "eks" {
+  source = "./modules/eks"
+
+  short_name   = var.short_name
+  default_tags = var.default_tags
+
+  eks_version = var.eks_version
+
+  vpc_subnet_public_ids  = module.network.vpc_subnet_public_ids
+  vpc_subnet_private_ids = module.network.vpc_subnet_private_ids
+
+  security_group_bastion_id     = module.security.security_group_bastion_id
+  security_group_eks_cluster_id = module.security.security_group_eks_cluster_id
+  security_group_front_id       = module.security.security_group_front_id
+
+}
