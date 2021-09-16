@@ -3,6 +3,10 @@ terraform {
   backend "s3" {}
 
 required_providers {
+    external = {
+      source  = "external"
+      version = "~> 2.0"
+    }
   
 
     aws= {
@@ -42,19 +46,6 @@ module "security" {
   bastion_allowed_cidrs = var.bastion_allowed_cidrs
 }
 
-module "bastion" {
-  source = "./modules/bastion"
-
-  short_name   = var.short_name
-  default_tags = var.default_tags
-
-  vpc_subnet_public_ids     = module.network.vpc_subnet_public_ids
-  security_group_bastion_id = module.security.security_group_bastion_id
-
-  bastion_allowed_port = var.bastion_allowed_port
-}
-
-
 module "storage" {
   source = "./modules/storage"
 
@@ -70,6 +61,17 @@ module "storage" {
   security_group_storage_id = module.security.security_group_storage_id
 }
 
+module "bastion" {
+  source = "./modules/bastion"
+
+  short_name   = var.short_name
+  default_tags = var.default_tags
+
+  vpc_subnet_public_ids     = module.network.vpc_subnet_public_ids
+  security_group_bastion_id = module.security.security_group_bastion_id
+
+  bastion_allowed_port = var.bastion_allowed_port
+}
 
 module "eks" {
   source = "./modules/eks"
@@ -86,4 +88,31 @@ module "eks" {
   security_group_eks_cluster_id = module.security.security_group_eks_cluster_id
   security_group_front_id       = module.security.security_group_front_id
 
+  eks_arn_user_list_with_masters_role  = var.eks_arn_user_list_with_masters_role
+  eks_arn_user_list_with_readonly_role = var.eks_arn_user_list_with_readonly_role
 }
+
+module "post-config" {
+  source = "./modules/post-config"
+
+  short_name   = var.short_name
+  default_tags = var.default_tags
+
+  bastion_name         = module.bastion.name
+  bastion_private_key  = module.bastion.private_key
+  bastion_allowed_port = var.bastion_allowed_port
+
+  domain_name = var.domain_name
+
+  vpc_id                              = module.network.vpc_id
+  eks_cluster_name                    = module.eks.eks_cluster_name
+  eks_fargate_profile_id              = module.eks.eks_fargate_profile_id
+  eks_node_role_arn                   = module.eks.eks_node_role_arn
+  eks_fargate_role_arn                = module.eks.eks_fargate_role_arn
+  eks_external_dns_role_arn           = module.eks.eks_external_dns_role_arn
+  eks_lb_controller_role_arn          = module.eks.eks_lb_controller_role_arn
+  eks_k8s_masters_role_arn            = module.eks.eks_k8s_masters_role_arn
+  eks_k8s_readonly_role_arn           = module.eks.eks_k8s_readonly_role_arn
+  eks_arn_user_list_with_masters_user = var.eks_arn_user_list_with_masters_user
+}
+
