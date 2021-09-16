@@ -33,9 +33,10 @@ This set up aims to build and deploy Servian's TechChallengeApp to AWS Cloud inf
 ## Directory Structure
 | Directory                | Purpose/Description                                                                                                                                              |
 |--------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [ansible](./ansible)     | Contains Ansible scripts required to configure the servers to run TechChallengeApp with my configuration                                                                   |
-| [terraform](./terraform) | Contains Terraform modules and scripts needed to spin up infrastructure needed to implement infrastructure on which TechChallengeApp will run 
-| [ecs](./ecs)             | Terraform generates a task definition JSON file for each task definition we create. Those JSON files are stored in this location to be used by pipelines |
+| [terraform](./terraform) | Contains Terraform modules and scripts needed to spin up infrastructure needed to implement infrastructure on which TechChallengeApp will be deplyed on.
+| [k8-manifests](./k8-manifests)     | Contains k8-manifests required to deploy and run TechChallengeApp in EKS Fargate.                                                                   |
+
+
 
 
 ## Infrastructure Creation and Configuration
