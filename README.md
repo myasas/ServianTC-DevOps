@@ -7,9 +7,9 @@ This set up aims to build and deploy Servian's TechChallengeApp to AWS Cloud inf
 **Immediate**
 - [x] Used proper Git workflow: [Gitflow Workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
 - [X] Prepared level architectural overview of my deployment.
+- [X] Security (Network segmentation (if applicable to the implementation), Secret storage, Platform security features)
 
 **Todo**
-- [ ] Security (Network segmentation (if applicable to the implementation), Secret storage, Platform security features)
 - [ ] Resiliency (Auto scaling and highly available frontend, Highly available Database)
 - [ ] Prepared process instructions for provisioning my solution.
 
