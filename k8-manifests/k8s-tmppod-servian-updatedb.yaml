@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: servian-updatedb
+  labels:
+    app: servian-updatedb
+spec:
+  containers:
+  - image: servian/techchallengeapp:latest
+    name: servian-updatedb
+    args: ['updatedb']
+    volumeMounts:
+      - name: servian-updatedb
+        mountPath: /TechChallengeApp/conf.toml
+        subPath: conf.toml
+  volumes:
+  - name: servian-updatedb
+    configMap:
+      name: servian-conf
