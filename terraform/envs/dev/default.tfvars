@@ -6,7 +6,7 @@ default_tags = {
   "Environment" = "preprod"
 }
 
-# FRONTS - 
+# FRONTS - Not configured since no cert available, and ALB ingress controller not supporting ACME/Letsencrypt
 domain_name     = "preprod-dev.servian.cloud"
 subdomain_names = ["serviantc-dev"]
 certificate_arn = "arn:aws:acm:ap-southeast-2:185922747583:certificate/ab57e501-9c4f-4002-bf57-17fd83077c75"
