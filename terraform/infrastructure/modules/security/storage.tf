@@ -16,30 +16,6 @@ resource "aws_security_group" "storage" {
   description = "Auto assigned by code."
 }
 
-resource "aws_security_group_rule" "storage_ingress_22" {
-  type        = "ingress"
-  from_port   = 22
-  to_port     = 22
-  protocol    = "tcp"
-  cidr_blocks = var.vpc_subnet_private_cidr
-
-  security_group_id = aws_security_group.storage.id
-
-  description = "Auto assigned by code."
-}
-
-resource "aws_security_group_rule" "storage_ingress_2049" {
-  type        = "ingress"
-  from_port   = 2049
-  to_port     = 2049
-  protocol    = "tcp"
-  cidr_blocks = var.vpc_subnet_private_cidr
-
-  security_group_id = aws_security_group.storage.id
-
-  description = "Auto assigned by code."
-}
-
 resource "aws_security_group_rule" "storage_ingress_5432" {
   type        = "ingress"
   from_port   = 5432
