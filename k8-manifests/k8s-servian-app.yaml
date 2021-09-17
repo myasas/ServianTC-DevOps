@@ -76,9 +76,9 @@ spec:
             failureThreshold: 20
             periodSeconds: 10
           # lifecycle:
-          #   preStop:
-          #     exec:
-          #       command: ["sh", "-c", "${CARBON_PATH}/bin/wso2server.sh stop"]
+            # postStart:
+            #   exec:
+            #     command: ["/bin/sh", "-c", "./TechChallengeApp updatedb -s"]
           resources:
             requests:
               memory: 64Mi
