@@ -2,18 +2,23 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: a1-ext-gws
+  name: serviantc-ext-gws
   namespace: default
   annotations:
-    alb.ingress.kubernetes.io/certificate-arn: >-
-      arn:aws:acm:ap-southeast-2:1232313132:certificate/d34c3a50-0bf8-4355-9117-1ce17aa210c7
+    # alb.ingress.kubernetes.io/certificate-arn: >-
+    #   arn:aws:acm:ap-southeast-2:1232313132:certificate/d34c3a50-0bf8-4355-9117-1ce17aa210c7
+    # Health Check Settings
+    alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
+    alb.ingress.kubernetes.io/healthcheck-port: "3000"
+    alb.ingress.kubernetes.io/healthcheck-path: /healthcheck/
+    alb.ingress.kubernetes.io/backend-protocol: HTTP
 
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/tags: >-
-      Type=NoManual,Client=Servian,Project=Servian-Test,Environment=preprod,App=a1-ext-gws
+      Type=NoManual,Client=Servian,Project=Servian-Test,Environment=preprod,App=serviantc-ext-gws
     alb.ingress.kubernetes.io/target-type: ip
-    external-dns.alpha.kubernetes.io/hostname: a1-ext-gws.atom.servian-Test.com
+    # external-dns.alpha.kubernetes.io/hostname: a1-ext-gws.atom.servian-Test.com
     kubernetes.io/ingress.class: alb
 
     # Security Settings -
@@ -24,41 +29,10 @@ metadata:
     # alb.ingress.kubernetes.io/load-balancer-attributes: access_logs.s3.enabled=true,access_logs.s3.bucket=preprod-servian-Test-alb-access-logs,routing.http.drop_invalid_header_fields.enabled=true,routing.http2.enabled=true,idle_timeout.timeout_seconds=60,deletion_protection.enabled=true
 
 spec:
-  tls:
-    - hosts:
-        - apigw.atom.servian-Test.com
-        - mgw.atom.servian-Test.com
-
   rules:
-    - host: apigw.atom.servian-Test.com
-      http:
+    - http:
         paths:
           - path: /*
-            pathType: ImplementationSpecific
             backend:
-              serviceName: api-apim
-              servicePort: 8243
-    - host: alb1a.preprod.servian-Test.chakray.cloud
-      http:
-        paths:
-          - path: /Test-policy-travel-read-v2-vs
-            pathType: ImplementationSpecific
-            backend:
-              serviceName: wso2mgw-Test-policy-travel-read-v2-vs
-              servicePort: 9095
-          - path: /Test-policy-travel-read-v2-vs/*
-            pathType: ImplementationSpecific
-            backend:
-              serviceName: wso2mgw-Test-policy-travel-read-v2-vs
-              servicePort: 9095
-          # - path: /Test-policy-health-read-v2-vs
-          #   pathType: ImplementationSpecific
-          #   backend:
-          #     serviceName: wso2mgw-Test-policy-health-read-v2-vs
-          #     servicePort: 9095
-          # - path: /Test-policy-health-read-v2-vs/*
-          #   pathType: ImplementationSpecific
-          #   backend:
-          #     serviceName: wso2mgw-Test-policy-health-read-v2-vs
-          #     servicePort: 9095
-
+              serviceName: serviantc
+              servicePort: 3000

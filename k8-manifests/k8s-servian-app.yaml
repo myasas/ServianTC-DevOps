@@ -68,10 +68,10 @@ spec:
           resources:
             requests:
               memory: 64Mi
-              cpu: 500m
+              cpu: 200m
             limits:
               memory: 400Mi
-              cpu: 200m
+              cpu: 500m
           ports:
             - containerPort: 3000
               protocol: "TCP"
@@ -104,12 +104,6 @@ kind: Service
 metadata:
   name: serviantc
   namespace: default
-  annotations:
-    # Health Check Settings
-    alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
-    alb.ingress.kubernetes.io/healthcheck-port: "3000"
-    alb.ingress.kubernetes.io/healthcheck-path: /healthcheck
-    alb.ingress.kubernetes.io/backend-protocol: HTTP
 spec:
   selector:
     deployment: serviantc
