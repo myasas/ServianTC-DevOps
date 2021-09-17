@@ -20,203 +20,163 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: servian
-  labels:
-    app: servian
+  name: serviantc
+  namespace: default
 spec:
+  replicas: 2
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
-      app: servian
+      deployment: serviantc
+      product: serviantcapp
   template:
     metadata:
       labels:
-        app: servian
+        deployment: serviantc
+        product: serviantcapp
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9201"
+        prometheus.io/path: /metric-service/metrics
     spec:
+      securityContext:
+          runAsUser: 0
+          runAsGroup: 0
+          fsGroup: 0
       containers:
-      - image: servian/techchallengeapp:latest
-        name: servian
-        args: ['serve']
-        ports:
-        - containerPort: 3000
+        - image: servian/techchallengeapp:latest
           name: servian
-        resources:
-          limits:
-            cpu: 500m
-          requests:
-            cpu: 200m
-        volumeMounts:
-          - name: servian
-            mountPath: /TechChallengeApp/conf.toml
-            subPath: conf.toml
+          args: ['serve']
+          imagePullPolicy: Always
+          livenessProbe:
+            exec:
+              command: ["/bin/sh", "-c", "nc -z localhost 3000"]
+            initialDelaySeconds: 120
+            failureThreshold: 20
+            periodSeconds: 10
+          readinessProbe:
+            exec:
+              command: ["/bin/sh", "-c", "nc -z localhost 3000"]
+            initialDelaySeconds: 120
+            failureThreshold: 20
+            periodSeconds: 10
+          # lifecycle:
+          #   preStop:
+          #     exec:
+          #       command: ["sh", "-c", "${CARBON_PATH}/bin/wso2server.sh stop"]
+          resources:
+            requests:
+              memory: 64Mi
+              cpu: 500m
+            limits:
+              memory: 400Mi
+              cpu: 200m
+          ports:
+            - containerPort: 3000
+              protocol: "TCP"
+          env:
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          volumeMounts:
+            - name: servian
+              mountPath: /TechChallengeApp/conf.toml
+              subPath: conf.toml
       volumes:
         - name: servian
           configMap:
             name: servian-conf
+      # serviceAccountName: servian-svc-account
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: servian
-  labels:
-    app: servian
+  name: serviantc
+  namespace: default
+  annotations:
+    # Health Check Settings
+    alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
+    alb.ingress.kubernetes.io/healthcheck-port: "3000"
+    alb.ingress.kubernetes.io/healthcheck-path: /healthcheck
+    alb.ingress.kubernetes.io/backend-protocol: HTTP
 spec:
-  ports:
-    - port: 80
-      name: http
-      targetPort: 3000
   selector:
-    app: servian
-  type: LoadBalancer
+    deployment: serviantc
+    product: serviantcapp
+  type: NodePort
+  ports:
+    - name: http
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
 
 
 # ---
 # apiVersion: apps/v1
 # kind: Deployment
 # metadata:
-#   name: wso2apim
-#   namespace: wso2
+#   name: servian
+#   labels:
+#     app: servian
 # spec:
-#   replicas: 2
-#   strategy:
-#     type: Recreate
 #   selector:
 #     matchLabels:
-#       deployment: wso2apim
-#       product: allinone
+#       app: servian
 #   template:
 #     metadata:
 #       labels:
-#         deployment: wso2apim
-#         product: allinone
-#       annotations:
-#         fluentbit.io/parser: "wso2"
-#         prometheus.io/scrape: "true"
-#         prometheus.io/port: "9201"
-#         prometheus.io/path: /metric-service/metrics
+#         app: servian
 #     spec:
-#       securityContext:
-#           runAsUser: 802
-#           runAsGroup: 802
-#           fsGroup: 802
 #       containers:
-#         - name: wso2apim
-#           image: 176325838707.dkr.ecr.me-south-1.amazonaws.com/sample-prod/wso2_ms_apim:3.2.0-1621832252200
-#           imagePullPolicy: Always
-#           livenessProbe:
-#             exec:
-#               command: ["/bin/sh", "-c", "nc -z localhost 9443"]
-#             initialDelaySeconds: 120
-#             failureThreshold: 20
-#             periodSeconds: 10
-#           readinessProbe:
-#             exec:
-#               command: ["/bin/sh", "-c", "nc -z localhost 9443"]
-#             initialDelaySeconds: 120
-#             failureThreshold: 20
-#             periodSeconds: 10
-#           lifecycle:
-#             preStop:
-#               exec:
-#                 command: ["sh", "-c", "${CARBON_PATH}/bin/wso2server.sh stop"]
-#           resources:
-#             requests:
-#               memory: 2Gi
-#               cpu: 2000m
-#             limits:
-#               memory: 4Gi
-#               cpu: 2000m
-#           ports:
-#             - containerPort: 8280
-#               protocol: "TCP"
-#             - containerPort: 8243
-#               protocol: "TCP"
-#             - containerPort: 9763
-#               protocol: "TCP"
-#             - containerPort: 9443
-#               protocol: "TCP"
-#             - containerPort: 5672
-#               protocol: "TCP"
-#             - containerPort: 9611
-#               protocol: "TCP"
-#             - containerPort: 9711
-#               protocol: "TCP"
-#           env:
-#             - name: "JAVA_OPTS"
-#               value: "-DenablePrometheusApi=false"
-#             - name: WATCH_NAMESPACE
-#               valueFrom:
-#                 fieldRef:
-#                   fieldPath: metadata.namespace
-#             - name: POD_NAME
-#               valueFrom:
-#                 fieldRef:
-#                   fieldPath: metadata.name
-#             - name: NODE_IP
-#               valueFrom:
-#                 fieldRef:
-#                   fieldPath: status.podIP
-#             - name: DRIVER_DBM_MYSQL
-#               value: "true"
-#             - name: DRIVER_DBM_MYSQL_URL
-#               value: "https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.22/mysql-connector-java-8.0.22.jar"
-#           volumeMounts:
-#             - name: wso2apim-conf
-#               mountPath: /home/wso2carbon/wso2am-3.2.0/repository/conf/deployment.toml
-#               subPath: deployment.toml
-#             - name: log-storage
-#               mountPath: /home/wso2carbon/wso2am-3.2.0/repository/logs/
-#         - name: log-collector
-#           image: fluent/fluent-bit:1.6
-#           securityContext:
-#             runAsUser: 1001
-#           resources:
-#             limits:
-#               cpu: 25m
-#               memory: 200Mi
-#           env:
-#             - name: POD_NAMESPACE
-#               valueFrom:
-#                 fieldRef:
-#                   apiVersion: v1
-#                   fieldPath: metadata.namespace
-#             - name: POD_NAME
-#               valueFrom:
-#                 fieldRef:
-#                   apiVersion: v1
-#                   fieldPath: metadata.name
-#             - name: NODE_NAME
-#               valueFrom:
-#                 fieldRef:
-#                   apiVersion: v1
-#                   fieldPath: spec.nodeName
-#             - name: NODE_IP
-#               valueFrom:
-#                 fieldRef:
-#                   apiVersion: v1
-#                   fieldPath: status.podIP
-#             - name: NAME
-#               value: "wso2apim"
-#             - name: TYPE
-#               value: "wso2apim"
-#           volumeMounts:
-#             - name: fluent-bit-conf
-#               mountPath: /fluent-bit/etc/
-#             - name: log-storage
-#               mountPath: /log
-#               readOnly: true
+#       - image: servian/techchallengeapp:latest
+#         name: servian
+#         args: ['serve']
+#         ports:
+#         - containerPort: 3000
+#           name: servian
+#         resources:
+#           limits:
+#             cpu: 500m
+#           requests:
+#             cpu: 200m
+#         volumeMounts:
+#           - name: servian
+#             mountPath: /TechChallengeApp/conf.toml
+#             subPath: conf.toml
 #       volumes:
-#         - name: wso2apim-conf
+#         - name: servian
 #           configMap:
-#             name: wso2apim-conf
-#         - configMap:
-#             defaultMode: 420
-#             name: fluent-bit-conf
-#           name: fluent-bit-conf
-#         - name: log-storage
-#           emptyDir: {}
-#       serviceAccountName: wso2-svc-account
-#       imagePullSecrets:
-#         - name: chakray-org-creds
+#             name: servian-conf
+
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: servian
+#   labels:
+#     app: servian
+# spec:
+#   ports:
+#     - port: 80
+#       name: http
+#       targetPort: 3000
+#   selector:
+#     app: servian
+#   type: LoadBalancer
+
+
+
 # ---
 # apiVersion: v1
 # kind: Service
@@ -257,29 +217,4 @@ spec:
 #       protocol: TCP
 #       port: 9711
 #       targetPort: 9711
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: api-apim
-#   namespace: wso2
-#   annotations:
-#     # Health Check Settings
-#     alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
-#     alb.ingress.kubernetes.io/healthcheck-port: "8280"
-#     alb.ingress.kubernetes.io/healthcheck-path: /services/Version
-#     alb.ingress.kubernetes.io/backend-protocol: HTTPS
-# spec:
-#   selector:
-#     deployment: wso2apim
-#     product: allinone
-#   type: NodePort
-#   ports:
-#     - name: pass-through-http
-#       protocol: TCP
-#       port: 8280
-#       targetPort: 8280
-#     - name: pass-through-https
-#       protocol: TCP
-#       port: 8243
-#       targetPort: 8243
+
