@@ -390,6 +390,8 @@ spec:
               servicePort: 3000
 EOF
 
-
+echo "-- ****** CONFIGURE DB TABLES IN INITIAL RUN ****** --"
+sleep 60
+kubectl exec -it --namespace=default $(kubectl get pods -o name -A | grep -m1 servian) -- sh -c "./TechChallengeApp updatedb -s"
 
 rm /home/ec2-user/.kube/config
