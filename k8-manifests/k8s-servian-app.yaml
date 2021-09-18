@@ -8,14 +8,6 @@ kind: ConfigMap
 metadata:
   name: servian-conf
 data:
-  conf.toml: |-
-    "DbUser" = "postgres"
-    "DbPassword" = "pAssw0rd"
-    "DbName" = "postgres"
-    "DbPort" = "5432"
-    "DbHost" = "postgres"
-    "ListenHost" = "0.0.0.0"
-    "ListenPort" = "3000"
   DbName: "postgres"
   DbPort: "5432"
   DbHost: "preprod-servian-storage-db.c2fhns4vxzho.ap-southeast-2.rds.amazonaws.com"
@@ -139,14 +131,6 @@ spec:
                 configMapKeyRef:
                   name: servian-conf
                   key: ListenPort
-          volumeMounts:
-            - name: servian
-              mountPath: /TechChallengeApp/conf.toml
-              subPath: conf.toml
-      volumes:
-        - name: servian
-          configMap:
-            name: servian-conf
       # serviceAccountName: servian-svc-account
 ---
 apiVersion: v1
@@ -164,99 +148,3 @@ spec:
       protocol: TCP
       port: 3000
       targetPort: 3000
-# ---
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: servian
-#   labels:
-#     app: servian
-# spec:
-#   selector:
-#     matchLabels:
-#       app: servian
-#   template:
-#     metadata:
-#       labels:
-#         app: servian
-#     spec:
-#       containers:
-#       - image: servian/techchallengeapp:latest
-#         name: servian
-#         args: ['serve']
-#         ports:
-#         - containerPort: 3000
-#           name: servian
-#         resources:
-#           limits:
-#             cpu: 500m
-#           requests:
-#             cpu: 200m
-#         volumeMounts:
-#           - name: servian
-#             mountPath: /TechChallengeApp/conf.toml
-#             subPath: conf.toml
-#       volumes:
-#         - name: servian
-#           configMap:
-#             name: servian-conf
-
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: servian
-#   labels:
-#     app: servian
-# spec:
-#   ports:
-#     - port: 80
-#       name: http
-#       targetPort: 3000
-#   selector:
-#     app: servian
-#   type: LoadBalancer
-
-
-
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: mgt-apim
-#   namespace: wso2
-#   annotations:
-#     # Health Check Settings
-#     alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
-#     alb.ingress.kubernetes.io/healthcheck-port: "8280"
-#     alb.ingress.kubernetes.io/healthcheck-path: /services/Version
-#     alb.ingress.kubernetes.io/backend-protocol: HTTPS
-#     # Sessiong stickiness/affinity
-#     alb.ingress.kubernetes.io/target-group-attributes: stickiness.enabled=true,stickiness.lb_cookie.duration_seconds=300
-# spec:
-#   selector:
-#     deployment: wso2apim
-#     product: allinone
-#   type: NodePort
-#   ports:
-#     - name: servlet-http
-#       protocol: TCP
-#       port: 9763
-#       targetPort: 9763
-#     - name: servlet-https
-#       protocol: TCP
-#       port: 9443
-#       targetPort: 9443
-#     - name: amqp-transport
-#       protocol: TCP
-#       port: 5672
-#       targetPort: 5672
-#     - name: tm-throttling-data
-#       protocol: TCP
-#       port: 9611
-#       targetPort: 9611
-#     - name: tm-throttling-auth
-#       protocol: TCP
-#       port: 9711
-#       targetPort: 9711
-
