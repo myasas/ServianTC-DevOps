@@ -92,6 +92,14 @@ module "eks" {
   eks_arn_user_list_with_readonly_role = var.eks_arn_user_list_with_readonly_role
 }
 
+module certificate {
+  source = "./modules/certificate"
+
+  # cert_dns_name = var.cert_dns_name
+  # cert_org_name = var.cert_org_name
+}
+
+
 module "post-config" {
   source = "./modules/post-config"
 
@@ -114,5 +122,7 @@ module "post-config" {
   eks_k8s_masters_role_arn            = module.eks.eks_k8s_masters_role_arn
   eks_k8s_readonly_role_arn           = module.eks.eks_k8s_readonly_role_arn
   eks_arn_user_list_with_masters_user = var.eks_arn_user_list_with_masters_user
+
+  eks_alb_ing_ssl_cert_arn            = module.certificate.alb_ing_ssl_cert_arn
 }
 
