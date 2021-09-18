@@ -51,6 +51,29 @@ resource "aws_eks_fargate_profile" "fargate_profile_load_balancer" {
   })
 }
 
+resource "aws_eks_fargate_profile" "fargate_profile_metrics_server" {
+  cluster_name           = aws_eks_cluster.my_cluster.name
+  fargate_profile_name   = "fp-metrics-server"
+  pod_execution_role_arn = aws_iam_role.fargate_role.arn
+  subnet_ids             = var.vpc_subnet_private_ids
+
+  selector {
+    namespace = "kube-system"
+    labels = {
+      "k8s-app" = "metrics-server"
+    }
+  }
+
+  depends_on = [
+    aws_eks_cluster.my_cluster,
+    aws_iam_role_policy_attachment.fargate_AmazonEKSFargatePodExecutionRolePolicy
+  ]
+
+  tags = merge(var.default_tags, {
+    "Name" = "${var.short_name}-fp-metrics-server"
+  })
+}
+
 resource "aws_eks_fargate_profile" "fargate_profile_default" {
   cluster_name           = aws_eks_cluster.my_cluster.name
   fargate_profile_name   = "fp-default"
