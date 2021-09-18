@@ -58,14 +58,14 @@ spec:
           livenessProbe:
             exec:
               command: ["/bin/sh", "-c", "nc -z localhost 3000"]
-            initialDelaySeconds: 120
-            failureThreshold: 20
+            initialDelaySeconds: 20
+            failureThreshold: 15
             periodSeconds: 10
           readinessProbe:
             exec:
               command: ["/bin/sh", "-c", "nc -z localhost 3000"]
-            initialDelaySeconds: 120
-            failureThreshold: 20
+            initialDelaySeconds: 20
+            failureThreshold: 15
             periodSeconds: 10
           # lifecycle:
             # postStart:
@@ -74,10 +74,10 @@ spec:
           resources:
             requests:
               memory: 64Mi
-              cpu: 200m
+              cpu: 100m
             limits:
-              memory: 400Mi
-              cpu: 500m
+              memory: 200Mi
+              cpu: 150m
           ports:
             - containerPort: 3000
               protocol: "TCP"
