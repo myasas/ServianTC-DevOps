@@ -55,6 +55,12 @@ resource "null_resource" "bastion" {
     destination = "credentials.txt"
   }
 
+  # Copy helm chart values file for ALB ingress controller
+  provisioner "file" {
+    source      = "conf/alb_ing_helm_values.yaml"
+    destination = "alb_ing_helm_values.yaml"
+  }
+  
   provisioner "file" {
     content = templatefile("${path.module}/post-config.sh.tpl", {
       vpc_id                              = var.vpc_id,

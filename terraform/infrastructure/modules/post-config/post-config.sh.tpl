@@ -87,16 +87,26 @@ kubectl rollout restart -n kube-system deploy coredns
 
 echo "-- Configure aws load balancer controller --"
 helm repo add eks https://aws.github.io/eks-charts
-kubectl apply -k "github.com/aws/eks-charts/stable/aws-load-balancer-controller//crds?ref=master"
-helm upgrade -i aws-load-balancer-controller \
+helm install aws-load-balancer-controller \
   eks/aws-load-balancer-controller \
-  -n kube-system \
-  --set serviceAccount.create=true \
-  --set serviceAccount.name=aws-load-balancer-controller \
-  --set serviceAccount.annotations."eks\.amazonaws\.com/role-arn"="${eks_lb_controller_role_arn}" \
   --set clusterName=${cluster_name} \
+  --set serviceAccount.name=aws-load-balancer-controller \
+  --set serviceAccount.create=true \
+  --set serviceAccount.annotations."eks\.amazonaws\.com/role-arn"="${eks_lb_controller_role_arn}" \
   --set region=ap-southeast-2 \
-  --set vpcId=${vpc_id}
+  --set vpcId=${vpc_id} \
+  -n kube-system -f alb_ing_helm_values.yaml --version=1.2.3
+
+# kubectl apply -k "github.com/aws/eks-charts/stable/aws-load-balancer-controller//crds?ref=master"
+# helm upgrade -i aws-load-balancer-controller \
+#   eks/aws-load-balancer-controller \
+#   -n kube-system \
+#   --set serviceAccount.create=true \
+#   --set serviceAccount.name=aws-load-balancer-controller \
+#   --set serviceAccount.annotations."eks\.amazonaws\.com/role-arn"="${eks_lb_controller_role_arn}" \
+#   --set clusterName=${cluster_name} \
+#   --set region=ap-southeast-2 \
+#   --set vpcId=${vpc_id}
 
 echo "-- Restart deploy AWS Load Balancer Controller --"
 kubectl rollout restart -n kube-system deploy aws-load-balancer-controller
