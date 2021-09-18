@@ -124,5 +124,9 @@ module "post-config" {
   eks_arn_user_list_with_masters_user = var.eks_arn_user_list_with_masters_user
 
   eks_alb_ing_ssl_cert_arn            = module.certificate.alb_ing_ssl_cert_arn
+  app_backend_db_host                 = module.storage.rds_address
+  app_backend_db_port                 = module.storage.rds_port
+  app_backend_db_user                 = base64encode(module.storage.rds_username_root_value)
+  app_backend_db_password             = base64encode(module.storage.rds_password_root_value)
 }
 

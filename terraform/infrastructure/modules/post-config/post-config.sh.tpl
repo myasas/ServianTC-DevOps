@@ -184,7 +184,212 @@ spec:
         fsGroup: 65534 # For ExternalDNS to be able to read Kubernetes and AWS token files
 EOF
 
+
 echo "-- Restart deploy external dns --"
 kubectl rollout restart -n kube-system deploy external-dns
+
+echo "-- ****** DEPLOY SERVIAN TECH CHALLENGE APP ****** --"
+cat <<EOF | kubectl apply -f -
+# apiVersion: v1
+# kind: Namespace
+# metadata:
+#   name: servian
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: servian-conf
+data:
+  DbName: "postgres"
+  DbPort: ${app_backend_db_port}
+  DbHost: ${app_backend_db_host}
+  ListenHost: "0.0.0.0"
+  ListenPort: "3000"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: serviantc-secret
+data:
+  # You can include additional key value pairs as you do with Opaque Secrets
+  dbuser: ${app_backend_db_user}
+  dbpassword: ${app_backend_db_password}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: serviantc
+  namespace: default
+spec:
+  replicas: 2
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      deployment: serviantc
+      product: serviantcapp
+  template:
+    metadata:
+      labels:
+        deployment: serviantc
+        product: serviantcapp
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9201"
+        prometheus.io/path: /metric-service/metrics
+    spec:
+      securityContext:
+          runAsUser: 0
+          runAsGroup: 0
+          fsGroup: 0
+      containers:
+        - image: servian/techchallengeapp:latest
+          name: servian
+          args: ['serve']
+          imagePullPolicy: Always
+          livenessProbe:
+            exec:
+              command: ["/bin/sh", "-c", "nc -z localhost 3000"]
+            initialDelaySeconds: 20
+            failureThreshold: 15
+            periodSeconds: 10
+          readinessProbe:
+            exec:
+              command: ["/bin/sh", "-c", "nc -z localhost 3000"]
+            initialDelaySeconds: 20
+            failureThreshold: 15
+            periodSeconds: 10
+          # lifecycle:
+            # postStart:
+            #   exec:
+            #     command: ["/bin/sh", "-c", "./TechChallengeApp updatedb -s"]
+          resources:
+            requests:
+              memory: 64Mi
+              cpu: 100m
+            limits:
+              memory: 200Mi
+              cpu: 150m
+          ports:
+            - containerPort: 3000
+              protocol: "TCP"
+          env:
+            # Define the environment variable
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: VTT_DBUSER
+              valueFrom:
+                secretKeyRef:
+                  name: serviantc-secret
+                  key: dbuser
+            - name: VTT_DBPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: serviantc-secret
+                  key: dbpassword
+
+            - name: VTT_DBNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: servian-conf
+                  key: DbName
+            - name: VTT_DBPORT
+              valueFrom:
+                configMapKeyRef:
+                  name: servian-conf
+                  key: DbPort
+            - name: VTT_DBHOST
+              valueFrom:
+                configMapKeyRef:
+                  name: servian-conf
+                  key: DbHost
+            - name: VTT_LISTENHOST
+              valueFrom:
+                configMapKeyRef:
+                  name: servian-conf
+                  key: ListenHost
+            - name: VTT_LISTENPORT
+              valueFrom:
+                configMapKeyRef:
+                  name: servian-conf
+                  key: ListenPort
+      # serviceAccountName: servian-svc-account
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: serviantc
+  namespace: default
+spec:
+  selector:
+    deployment: serviantc
+    product: serviantcapp
+  type: NodePort
+  ports:
+    - name: http
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
+
+EOF
+
+echo "-- ****** DEPLOY APPLICATION LOAD BALANCER ****** --"
+cat <<EOF | kubectl apply -f -
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: serviantc-ext-gws
+  namespace: default
+  annotations:
+    # TO - AUTO UPDATE FROM TERRAFORM
+    alb.ingress.kubernetes.io/certificate-arn: >-
+      ${eks_alb_ing_ssl_cert_arn}
+    # Health Check Settings
+    alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
+    alb.ingress.kubernetes.io/healthcheck-port: "3000"
+    alb.ingress.kubernetes.io/healthcheck-path: /healthcheck/
+    alb.ingress.kubernetes.io/backend-protocol: HTTP
+
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/tags: >-
+      Type=NoManual,Client=Servian,Project=Servian-Test,Environment=preprod,App=serviantc-ext-gws
+    alb.ingress.kubernetes.io/target-type: ip
+    # external-dns.alpha.kubernetes.io/hostname: a1-ext-gws.atom.servian-Test.com
+    kubernetes.io/ingress.class: alb
+
+
+    # Security Settings -
+      # TODO - FUTURE ENHANCEMENT- WHITELIST IPS FROM ALB SECURITY GROUPS
+    # alb.ingress.kubernetes.io/inbound-cidrs: 10.227.245.60/32
+      # TODO - FUTURE ENHANCEMENT-BIND ALB TO A WAF FOR IMPROVED SECURITY
+    # alb.ingress.kubernetes.io/wafv2-acl-arn: arn:aws:wafv2:ap-southeast-2:176325838707:regional/webacl/waf-external-web-acl/e075cd0c-dac9-44c2-b9b0-4997a8d53832
+
+    # Logging
+      # TODO - FUTURE ENHANCEMENT-ENABLE ALB LOGGING AND STORE IN S3 BUCKET. ENABLE DELETE PROTECTION FOR ALB
+    # alb.ingress.kubernetes.io/load-balancer-attributes: access_logs.s3.enabled=true,access_logs.s3.bucket=preprod-servian-Test-alb-access-logs,routing.http.drop_invalid_header_fields.enabled=true,routing.http2.enabled=true,idle_timeout.timeout_seconds=60,deletion_protection.enabled=true
+
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: serviantc
+              servicePort: 3000
+EOF
+
+
 
 rm /home/ec2-user/.kube/config
