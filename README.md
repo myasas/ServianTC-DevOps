@@ -54,7 +54,7 @@ export AWS_DEFAULT_REGION=ap-southeast-2
 export ENVIRONMENT=preprod
 ```
 
-Or you can also define an AWS Profile (https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) on your machine and use it:
+**Or you can also define** an AWS Profile (https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) on your machine and use it:
 
 ```bash
 export AWS_DEFAULT_REGION=ap-southeast-2
@@ -62,7 +62,7 @@ export AWS_PROFILE=preprod
 export ENVIRONMENT=preprod
 ```
 
-S3 buicket creation related parameters,
+Following environment variables are required in S3 buicket creation,
 ```bash
 export AWS_ACC_ID=
 export AWS_S3_BUCKET=
