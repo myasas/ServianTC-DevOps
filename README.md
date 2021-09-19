@@ -62,14 +62,15 @@ export AWS_PROFILE=preprod
 export ENVIRONMENT=preprod
 ```
 
-### Steps to follow if Make file process is chosen?
-**0. Create S3 Bucket**
-* With make file, you are given with facility of simply creating s3 bucket with required permissions and policy. You can additionally define following paramers at the beginning if s3 bucket creation is required.
-
+S3 buicket creation related parameters,
 ```bash
 export AWS_ACC_ID=
 export AWS_S3_BUCKET=
 ```
+
+### Steps to follow if Make file process is chosen?
+**0. Create S3 Bucket**
+* With make file, you are given with facility of simply creating s3 bucket with required permissions and policy. You can additionally define following paramers at the beginning if s3 bucket creation is required.
 
 ```bash
 make init-s3
@@ -91,6 +92,17 @@ make destroy
 ```
 
 ### Steps to follow if Terraform command process is chose?
+**0. Create S3 Bucket**
+```bash
+cd aws-s3-be-policy
+aws s3 mb s3://${AWS_S3_BUCKET}
+aws s3api put-public-access-block \
+    --bucket ${AWS_S3_BUCKET} \
+    --public-access-block-configuration "BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true"
+envsubst < policy.json.template > mypolicy.json
+aws s3api put-bucket-policy --bucket ${AWS_S3_BUCKET} --policy file://mypolicy.json
+rm -rf mypolicy.json
+```
 
 **1. Update dependancies**
 
@@ -122,7 +134,7 @@ terraform destroy -var-file="../envs/${ENVIRONMENT}/default.tfvars"
 
 
 
-Work Breakdown
+My(Yasas's) Work Breakdown
 -------------------------------
 **Immediate**
 - [x] Used proper Git workflow: [Gitflow Workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
