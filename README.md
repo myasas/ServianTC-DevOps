@@ -4,17 +4,18 @@ Introduction
 -------------------------------
 This set up aims to build and deploy Servian's TechChallengeApp to AWS Cloud infrastructure while adhering to following guidelines. 
 
+Work Breakdown
+-------------------------------
 **Immediate**
 - [x] Used proper Git workflow: [Gitflow Workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
 - [X] Prepared level architectural overview of my deployment.
 - [X] Security (Network segmentation (if applicable to the implementation), Secret storage, Platform security features)
-
+- [X] Resiliency (Auto scaling and highly available frontend, Highly available Database)
 **Todo**
-- [ ] Resiliency (Auto scaling and highly available frontend, Highly available Database)
 - [ ] Prepared process instructions for provisioning my solution.
 
 **Noticed**
-- [ ] If you are setting up the database using RDS, do not run the ./TechChallengeApp updatedb command. Instead run ./TechChallengeApp updatedb -s
+- [X] If you are setting up the database using RDS, do not run the ./TechChallengeApp updatedb command. Instead run ./TechChallengeApp updatedb -s
 
 #### **Prerequisites**
 * Terraform
@@ -34,7 +35,8 @@ This set up aims to build and deploy Servian's TechChallengeApp to AWS Cloud inf
 | Directory                | Purpose/Description                                                                                                                                              |
 |--------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [terraform](./terraform) | Contains Terraform modules and scripts needed to spin up infrastructure needed to implement infrastructure on which TechChallengeApp will be deplyed on.
-| [k8-manifests](./k8-manifests)     | Contains k8-manifests required to deploy and run TechChallengeApp in EKS Fargate.                                                                   |
+| [k8-manifests](./k8-manifests)     | Contains palceholder view of k8-manifests required to deploy and run TechChallengeApp in EKS Fargate.                                                                   |
+| [aws-s3-be-policy](./aws-s3-be-policy)     | Contains bucket policy template for Terraform backend s3 bucket.                                                                   |
 
 
 

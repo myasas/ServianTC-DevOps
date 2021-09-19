@@ -5,3 +5,5 @@
 **/.vagrant
 **/*.pem
 **/.idea
+**/credentials.txt
+**/mypolicy.json

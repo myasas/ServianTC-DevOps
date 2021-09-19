@@ -1,5 +1,6 @@
+# Define all providers required by the current module, terraform version and backend used.
 terraform {
-  required_version = "~> 0.0"
+  required_version = "~> 0.12"
   backend "s3" {}
 
 required_providers {
@@ -16,6 +17,7 @@ required_providers {
   }
 }
 
+# Provision VPC, Subnets, Route tables, NAT gateway, IAM for flow logs
 module "network" {
   source = "./modules/network"
 
@@ -32,6 +34,7 @@ module "network" {
   vpc_subnet_storage_cidr = var.vpc_subnet_storage_cidr
 }
 
+# Provision security groups for Bastion, EKS cluster, RDS DB, Load balancers
 module "security" {
   source = "./modules/security"
 
@@ -46,6 +49,7 @@ module "security" {
   bastion_allowed_cidrs = var.bastion_allowed_cidrs
 }
 
+# Provision RDS Postgres DB required for the Servian App
 module "storage" {
   source = "./modules/storage"
 
@@ -61,6 +65,7 @@ module "storage" {
   security_group_storage_id = module.security.security_group_storage_id
 }
 
+# Provision Bastion VM for accessing private EKS cluster, SSH port protected via security group
 module "bastion" {
   source = "./modules/bastion"
 
@@ -73,6 +78,7 @@ module "bastion" {
   bastion_allowed_port = var.bastion_allowed_port
 }
 
+# Provision internal EKS cluster backed by Fargate. (In order to deploy containerized App)
 module "eks" {
   source = "./modules/eks"
 
@@ -92,6 +98,15 @@ module "eks" {
   eks_arn_user_list_with_readonly_role = var.eks_arn_user_list_with_readonly_role
 }
 
+# Provison certificate (self-signed) and add to AWS Cert Manager
+module certificate {
+  source = "./modules/certificate"
+
+  cert_dns_name = var.cert_dns_name
+  cert_org_name = var.cert_org_name
+}
+
+# Connect in to Bastion, configure k8s ALB ingress controller, deploy servian app to k8s, configure k8s horizontal pod autoscaler
 module "post-config" {
   source = "./modules/post-config"
 
@@ -114,5 +129,11 @@ module "post-config" {
   eks_k8s_masters_role_arn            = module.eks.eks_k8s_masters_role_arn
   eks_k8s_readonly_role_arn           = module.eks.eks_k8s_readonly_role_arn
   eks_arn_user_list_with_masters_user = var.eks_arn_user_list_with_masters_user
+
+  eks_alb_ing_ssl_cert_arn            = module.certificate.alb_ing_ssl_cert_arn
+  app_backend_db_host                 = module.storage.rds_address
+  app_backend_db_port                 = module.storage.rds_port
+  app_backend_db_user                 = base64encode(module.storage.rds_username_root_value)
+  app_backend_db_password             = base64encode(module.storage.rds_password_root_value)
 }
 

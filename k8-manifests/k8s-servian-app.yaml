@@ -1,0 +1,150 @@
+# apiVersion: v1
+# kind: Namespace
+# metadata:
+#   name: servian
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: servian-conf
+data:
+  DbName: "postgres"
+  DbPort: "5432"
+  DbHost: "preprod-servian-storage-db.c2fhns4vxzho.ap-southeast-2.rds.amazonaws.com"
+  ListenHost: "0.0.0.0"
+  ListenPort: "3000"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: serviantc-secret
+data:
+  # You can include additional key value pairs as you do with Opaque Secrets
+  dbuser: cm9vdA==
+  dbpassword: VmZuRHNnSzhITlZtOHE0
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: serviantc
+  namespace: default
+spec:
+  replicas: 2
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      deployment: serviantc
+      product: serviantcapp
+  template:
+    metadata:
+      labels:
+        deployment: serviantc
+        product: serviantcapp
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9201"
+        prometheus.io/path: /metric-service/metrics
+    spec:
+      securityContext:
+          runAsUser: 0
+          runAsGroup: 0
+          fsGroup: 0
+      containers:
+        - image: servian/techchallengeapp:latest
+          name: servian
+          args: ['serve']
+          imagePullPolicy: Always
+          livenessProbe:
+            exec:
+              command: ["/bin/sh", "-c", "nc -z localhost 3000"]
+            initialDelaySeconds: 20
+            failureThreshold: 15
+            periodSeconds: 10
+          readinessProbe:
+            exec:
+              command: ["/bin/sh", "-c", "nc -z localhost 3000"]
+            initialDelaySeconds: 20
+            failureThreshold: 15
+            periodSeconds: 10
+          # lifecycle:
+            # postStart:
+            #   exec:
+            #     command: ["/bin/sh", "-c", "./TechChallengeApp updatedb -s"]
+          resources:
+            requests:
+              memory: 64Mi
+              cpu: 100m
+            limits:
+              memory: 200Mi
+              cpu: 150m
+          ports:
+            - containerPort: 3000
+              protocol: "TCP"
+          env:
+            # Define the environment variable
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: VTT_DBUSER
+              valueFrom:
+                secretKeyRef:
+                  name: serviantc-secret
+                  key: dbuser
+            - name: VTT_DBPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: serviantc-secret
+                  key: dbpassword
+
+            - name: VTT_DBNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: servian-conf
+                  key: DbName
+            - name: VTT_DBPORT
+              valueFrom:
+                configMapKeyRef:
+                  name: servian-conf
+                  key: DbPort
+            - name: VTT_DBHOST
+              valueFrom:
+                configMapKeyRef:
+                  name: servian-conf
+                  key: DbHost
+            - name: VTT_LISTENHOST
+              valueFrom:
+                configMapKeyRef:
+                  name: servian-conf
+                  key: ListenHost
+            - name: VTT_LISTENPORT
+              valueFrom:
+                configMapKeyRef:
+                  name: servian-conf
+                  key: ListenPort
+      # serviceAccountName: servian-svc-account
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: serviantc
+  namespace: default
+spec:
+  selector:
+    deployment: serviantc
+    product: serviantcapp
+  type: NodePort
+  ports:
+    - name: http
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
