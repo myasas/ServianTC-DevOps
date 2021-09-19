@@ -6,8 +6,8 @@ metadata:
   namespace: default
   annotations:
     # TO - AUTO UPDATE FROM TERRAFORM
-    alb.ingress.kubernetes.io/certificate-arn: >-
-      arn:aws:acm:ap-southeast-2:185922747583:certificate/807dc95e-bd99-4f75-be73-f77a0261f614
+    # alb.ingress.kubernetes.io/certificate-arn: >-
+    #   arn:aws:acm:ap-southeast-2:185922747583:certificate/807dc95e-bd99-4f75-be73-f77a0261f614
     # Health Check Settings
     alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
     alb.ingress.kubernetes.io/healthcheck-port: "3000"
