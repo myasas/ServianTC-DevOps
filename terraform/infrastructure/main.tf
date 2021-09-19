@@ -95,8 +95,8 @@ module "eks" {
 module certificate {
   source = "./modules/certificate"
 
-  # cert_dns_name = var.cert_dns_name
-  # cert_org_name = var.cert_org_name
+  cert_dns_name = var.cert_dns_name
+  cert_org_name = var.cert_org_name
 }
 
 

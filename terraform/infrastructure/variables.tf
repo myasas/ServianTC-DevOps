@@ -66,3 +66,11 @@ variable "bastion_allowed_cidrs" {
 variable "nat_gateway_size" {
   type = string
 }
+
+variable "cert_dns_name" {
+  type = string
+}
+
+variable "cert_org_name" {
+  type = string
+}

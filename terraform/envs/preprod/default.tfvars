@@ -50,3 +50,7 @@ storage_instance_class = "db.t2.micro"
 # BASTION ALLOWED
 bastion_allowed_port = "22"
 bastion_allowed_cidrs = ["175.157.44.79/32"]
+
+# ACM Certificate related
+cert_dns_name = "*.ap-southeast-2.elb.amazonaws.com"
+cert_org_name = "servian"
