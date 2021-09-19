@@ -5,6 +5,7 @@
 # export AWS_DEFAULT_REGION=ap-southeast-2
 # export AWS_PROFILE=default
 # export ENVIRONMENT=preprod
+# export AWS_ACC_ID=185922747583 (s3 bucket named 'terraform-backend-resources' shall be created)
 
 ROOT_DIR := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 TF_DIR := $(ROOT_DIR)/terraform/infrastructure
