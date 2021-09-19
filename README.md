@@ -4,6 +4,8 @@ Introduction
 -------------------------------
 This set up aims to build and deploy Servian's TechChallengeApp to AWS Cloud infrastructure while adhering to following guidelines. 
 
+* **DEMO PAGE.** (More details on Accessing the actually deployed ServianTC APP and screenshots can be found in [Demo.md](Demo.md))
+
 ### **Prerequisites**
 * AWS IAM Account with Priviledged access for following services
   * EC2, EKS, ELB, S3, SSM, RDS, IAM, etc.
