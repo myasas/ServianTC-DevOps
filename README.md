@@ -136,13 +136,25 @@ terraform destroy -var-file="../envs/${ENVIRONMENT}/default.tfvars"
 
 My(Yasas's) Work Breakdown
 -------------------------------
-**Immediate**
+**Todo**
+**Done**
 - [x] Used proper Git workflow: [Gitflow Workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
 - [X] Prepared level architectural overview of my deployment.
 - [X] Security (Network segmentation (if applicable to the implementation), Secret storage, Platform security features)
 - [X] Resiliency (Auto scaling and highly available frontend, Highly available Database)
-**Todo**
-- [ ] Prepared process instructions for provisioning my solution.
+- [X] Prepared process instructions for provisioning my solution.
 
 **Noticed**
 - [X] If you are setting up the database using RDS, do not run the ./TechChallengeApp updatedb command. Instead run ./TechChallengeApp updatedb -s
+
+**Limitations**
+* Though HTTPS with TLS is used, CA Signed certificate could not be used. (instead aself-signed certificate was used)
+  * Lets Encrypt - ACME is not supported in AWS ALB ingress controller
+  * While Nginx Ingress controller supports ACME, AWS Fargate does not support Nginx ingress controller
+  * While AWS Certificate Manager offers free CA signed certificates, could not obtain due to not havein dedicated DNS for the app.
+
+**Suggested Improvements**
+* Attaching AWS WAF to the AWS ALB. 
+(For enhanced security if the APP is growing)
+* Attaching AWS aws Global Accelerator to ALB.
+(For enhanced performance if the APP is growing)
