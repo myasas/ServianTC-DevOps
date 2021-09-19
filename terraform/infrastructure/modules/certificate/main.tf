@@ -7,8 +7,8 @@ resource "tls_self_signed_cert" "alb_ing_ssl" {
   private_key_pem = tls_private_key.alb_ing_ssl.private_key_pem
 
   subject {
-    common_name  = "${var.cert_dns_name}"
-    organization = "${var.cert_org_name}"
+    common_name  = var.cert_dns_name
+    organization = var.cert_org_name
   }
 
   validity_period_hours = 8784
