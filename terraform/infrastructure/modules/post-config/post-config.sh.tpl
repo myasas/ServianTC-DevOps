@@ -358,6 +358,7 @@ spec:
 
 EOF
 
+
 echo "-- ****** DEPLOY Metrics Server for use of Horizontal Pod Autoscaler ****** --"
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 
@@ -365,8 +366,12 @@ echo "-- ****** CONFIGURE DB TABLES OF SERVIAN APP IN INITIAL RUN ****** --"
 sleep 60
 kubectl exec -it --namespace=default $(kubectl get pods -o name -A | grep -m1 servian) -- sh -c "./TechChallengeApp updatedb -s"
 
+# Disable exit on non 0
+set +e
 echo "-- ****** CONFIGURE Horizontal Pod Autoscaler ****** --"
 kubectl autoscale deployment serviantc --cpu-percent=50 --min=2 --max=5
+# Enable exit on non 0
+set -e
 sleep 2
 kubectl describe hpa
 
@@ -421,6 +426,6 @@ rm k8s-ingress-ext-servian-app.yaml
 
 echo "-- ****** PRINT load balancer HOSTNAME ****** --"
 sleep 2
-LB_HOST_NAME=kubectl get ing serviantc-ext-gws -o='custom-columns=Address:.status.loadBalancer.ingress[0].hostname' --no-headers
-echo "Servian Tech Challenge App can be accessed via: https://$LB_HOST_NAME"
+kubectl get ing serviantc-ext-gws -o='custom-columns=Address:.status.loadBalancer.ingress[0].hostname' --no-headers
+echo "Servian Tech Challenge App can be accessed via: https://LB_HOST_NAME"
 # rm /home/ec2-user/.kube/config
