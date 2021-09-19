@@ -4,19 +4,6 @@ Introduction
 -------------------------------
 This set up aims to build and deploy Servian's TechChallengeApp to AWS Cloud infrastructure while adhering to following guidelines. 
 
-Work Breakdown
--------------------------------
-**Immediate**
-- [x] Used proper Git workflow: [Gitflow Workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
-- [X] Prepared level architectural overview of my deployment.
-- [X] Security (Network segmentation (if applicable to the implementation), Secret storage, Platform security features)
-- [X] Resiliency (Auto scaling and highly available frontend, Highly available Database)
-**Todo**
-- [ ] Prepared process instructions for provisioning my solution.
-
-**Noticed**
-- [X] If you are setting up the database using RDS, do not run the ./TechChallengeApp updatedb command. Instead run ./TechChallengeApp updatedb -s
-
 #### **Prerequisites**
 * Terraform
 * AWS Cli 
@@ -47,3 +34,16 @@ Work Breakdown
 ```shell
 make
 ```
+
+Work Breakdown
+-------------------------------
+**Immediate**
+- [x] Used proper Git workflow: [Gitflow Workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
+- [X] Prepared level architectural overview of my deployment.
+- [X] Security (Network segmentation (if applicable to the implementation), Secret storage, Platform security features)
+- [X] Resiliency (Auto scaling and highly available frontend, Highly available Database)
+**Todo**
+- [ ] Prepared process instructions for provisioning my solution.
+
+**Noticed**
+- [X] If you are setting up the database using RDS, do not run the ./TechChallengeApp updatedb command. Instead run ./TechChallengeApp updatedb -s
