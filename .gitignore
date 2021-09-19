@@ -6,3 +6,4 @@
 **/*.pem
 **/.idea
 **/credentials.txt
+**/mypolicy.json
