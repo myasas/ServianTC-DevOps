@@ -419,4 +419,8 @@ EOF
 kubectl apply -f k8s-ingress-ext-servian-app.yaml
 rm k8s-ingress-ext-servian-app.yaml
 
+echo "-- ****** PRINT load balancer HOSTNAME ****** --"
+sleep 2
+LB_HOST_NAME=kubectl get ing serviantc-ext-gws -o='custom-columns=Address:.status.loadBalancer.ingress[0].hostname' --no-headers
+echo "Servian Tech Challenge App can be accessed via: https://$LB_HOST_NAME"
 # rm /home/ec2-user/.kube/config
