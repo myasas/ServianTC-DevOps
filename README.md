@@ -4,6 +4,8 @@ Introduction
 -------------------------------
 This set up aims to build and deploy Servian's TechChallengeApp to AWS Cloud infrastructure while adhering to following guidelines. 
 
+* **DEMO PAGE.** (More details on Accessing the actually deployed ServianTC APP and screenshots can be found in [Demo.md](Demo.md))
+
 ### **Prerequisites**
 * AWS IAM Account with Priviledged access for following services
   * EC2, EKS, ELB, S3, SSM, RDS, IAM, etc.
@@ -17,7 +19,7 @@ This set up aims to build and deploy Servian's TechChallengeApp to AWS Cloud inf
 ## Architecture
 * Architecture Design Records (ADR) are recorded in  [DesignRecords.md](DesignRecords.md) - this file.
 * **Decision Tree.** (More details in [DesignRecords.md#5-finalize-design-decisions--network--resiliency](DesignRecords.md))
-![Dicision Tree](https://drive.google.com/uc?export=view&id=1rIwPT1eiqitH_zlGjG48x0JhVPLbRKvu)
+![Dicision Tree](https://drive.google.com/uc?export=view&id=1HuJ2VeDUPYWcw1bbTTnTkn9LgqISUuCz)
 * **Architecture Diagram.** (More details in [DesignRecords.md#6-finalize-architecture](DesignRecords.md))
 ![Architecture Diagram](https://drive.google.com/uc?export=view&id=1Alyc_8pXIag2RCma3BkUI7tkGjUi6wor)
 
