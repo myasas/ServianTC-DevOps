@@ -1,0 +1,22 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AddCannedAcl",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::$AWS_ACC_ID:root"
+            },
+            "Action": [
+                "s3:PutObject",
+                "s3:*"
+            ],
+            "Resource": "arn:aws:s3:::$AWS_S3_BUCKET/*",
+            "Condition": {
+                "StringEquals": {
+                    "s3:x-amz-acl": "public-read"
+                }
+            }
+        }
+    ]
+}
