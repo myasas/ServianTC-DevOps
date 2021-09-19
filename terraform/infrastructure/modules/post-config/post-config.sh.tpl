@@ -87,7 +87,22 @@ kubectl rollout restart -n kube-system deploy coredns
 
 echo "-- Configure aws load balancer controller --"
 helm repo add eks https://aws.github.io/eks-charts
+# Disable exit on non 0
+set +e
 helm install aws-load-balancer-controller \
+  eks/aws-load-balancer-controller \
+  --set clusterName=${cluster_name} \
+  --set serviceAccount.name=aws-load-balancer-controller \
+  --set serviceAccount.create=true \
+  --set serviceAccount.annotations."eks\.amazonaws\.com/role-arn"="${eks_lb_controller_role_arn}" \
+  --set region=ap-southeast-2 \
+  --set vpcId=${vpc_id} \
+  -n kube-system -f alb_ing_helm_values.yaml --version=1.2.3
+# Enable exit on non 0
+set -e
+
+# Incase if change needs to be applied to exisitng ALB ingress controller
+helm upgrade aws-load-balancer-controller \
   eks/aws-load-balancer-controller \
   --set clusterName=${cluster_name} \
   --set serviceAccount.name=aws-load-balancer-controller \
@@ -343,9 +358,12 @@ spec:
 
 EOF
 
+echo "-- ****** CONFIGURE DB TABLES IN INITIAL RUN ****** --"
+sleep 60
+kubectl exec -it --namespace=default $(kubectl get pods -o name -A | grep -m1 servian) -- sh -c "./TechChallengeApp updatedb -s"
+
 echo "-- ****** DEPLOY APPLICATION LOAD BALANCER ****** --"
-cat <<EOF | kubectl apply -f -
----
+cat << 'EOF' |tee k8s-ingress-ext-servian-app.yaml
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -390,8 +408,9 @@ spec:
               servicePort: 3000
 EOF
 
-echo "-- ****** CONFIGURE DB TABLES IN INITIAL RUN ****** --"
-sleep 60
-kubectl exec -it --namespace=default $(kubectl get pods -o name -A | grep -m1 servian) -- sh -c "./TechChallengeApp updatedb -s"
+kubectl apply -f k8s-ingress-ext-servian-app.yaml
+rm k8s-ingress-ext-servian-app.yaml
 
-rm /home/ec2-user/.kube/config
+
+
+# rm /home/ec2-user/.kube/config
