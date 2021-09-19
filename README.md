@@ -75,17 +75,17 @@ export AWS_S3_BUCKET=
 make init-s3
 ```
 
-**0. Update dependancies**
+**1. Update dependancies**
 ```bash
 make init
 ```
 
-**0. Deploy of infrastructure**
+**2. Deploy of infrastructure**
 ```bash
 make deploy
 ```
 
-**0. Destroy of infrastructure**
+**3. Destroy of infrastructure**
 ```bash
 make destroy
 ```
@@ -104,7 +104,7 @@ terraform init -backend=true -backend-config=../envs/${ENVIRONMENT}/backend.conf
 ```
 **Note:** This step must always be done before deploying or destroying the infrastructure.
 
-**1. Deploy of infrastructure**
+**2. Deploy of infrastructure**
 
 
 ```bash
@@ -113,7 +113,7 @@ terraform plan -var-file="../envs/${ENVIRONMENT}/default.tfvars" -out=.terraform
 terraform apply .terraform/terraform.tfplan
 ```
 
-**1. Destroy of infrastructure**
+**3. Destroy of infrastructure**
 
 ```bash
 cd terraform/infrastructure
