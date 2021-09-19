@@ -35,7 +35,8 @@ Work Breakdown
 | Directory                | Purpose/Description                                                                                                                                              |
 |--------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [terraform](./terraform) | Contains Terraform modules and scripts needed to spin up infrastructure needed to implement infrastructure on which TechChallengeApp will be deplyed on.
-| [k8-manifests](./k8-manifests)     | Contains k8-manifests required to deploy and run TechChallengeApp in EKS Fargate.                                                                   |
+| [k8-manifests](./k8-manifests)     | Contains palceholder view of k8-manifests required to deploy and run TechChallengeApp in EKS Fargate.                                                                   |
+| [aws-s3-be-policy](./aws-s3-be-policy)     | Contains bucket policy template for Terraform backend s3 bucket.                                                                   |
 
 
 
