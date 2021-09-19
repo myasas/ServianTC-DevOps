@@ -48,3 +48,18 @@ variable "domain_name" {
 variable "bastion_allowed_port" {
   type = string
 }
+
+variable eks_alb_ing_ssl_cert_arn {
+}
+
+variable app_backend_db_host {
+}
+
+variable app_backend_db_port {
+}
+
+variable app_backend_db_user {
+}
+
+variable app_backend_db_password {
+}
