@@ -32,13 +32,35 @@ This set up aims to build and deploy Servian's TechChallengeApp to AWS Cloud inf
 
 ## Process and Instructions - Infrastructure Creation and Configuration
 
+### Requirements to define a new environment
+
+Requirements to create a new environment are:
+- Create an S3 bucket to store data and states.
+
+Remember to create two files that define an environment within the folder "terraform/envs/#ENV#/".
+- backend.conf
+- default.tfvars
+Note: Here environment is considered as PreProd.
+
+### Common steps
 * AWS "access key ID", "secret access key" for user with nessasary permissions
 * Prepare s3 bucket with neccessary permissions to act as Terraforms state bucket
+
+### Steps to follow if Terraform command process is chosen
+1. Simple command to see functionality of terraform core
+```shell
+terraform
+```
+
+### Steps to follow if Make file process is chosen?
 
 1. Simple command to see functionality of makefile
 ```shell
 make
 ```
+
+
+
 
 Work Breakdown
 -------------------------------
