@@ -68,8 +68,8 @@ export AWS_ACC_ID=
 export AWS_S3_BUCKET=
 ```
 
-### Steps to follow "if Make file process is chosen?"**
-**0. Create S3 Bucket
+### Steps to follow "if Make file process is chosen?"
+**0. Create S3 Bucket**
 * With make file, you are given with facility of simply creating s3 bucket with required permissions and policy. You can additionally define following paramers at the beginning if s3 bucket creation is required.
 
 ```bash
