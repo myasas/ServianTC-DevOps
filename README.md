@@ -4,12 +4,15 @@ Introduction
 -------------------------------
 This set up aims to build and deploy Servian's TechChallengeApp to AWS Cloud infrastructure while adhering to following guidelines. 
 
-#### **Prerequisites**
-* Terraform
-* AWS Cli 
-* AWS "access key ID", "secret access key" for user with nessasary permissions
-* Run time environment for make file
-* Prepare s3 bucket with neccessary permissions to act as Terraforms state bucket
+### **Prerequisites**
+* AWS IAM Account with Priviledged access for following services
+  * EC2, EKS, ELB, S3, SSM, RDS, IAM, etc.
+* AWS CLI
+* Terraform Core installed
+* Makefile runtime (Ability to run Makefile)
+* CLI Utilities: envsubst, etc.
+* Network reachability to "http://ipv4.icanhazip.com" (in evaluating public IP of Terraform Core workstation for whitelisting)
+
 
 ## Architecture
 * Architecture Design Records (ADR) are recorded in  [DesignRecords.md](DesignRecords.md) - this file.
@@ -27,8 +30,10 @@ This set up aims to build and deploy Servian's TechChallengeApp to AWS Cloud inf
 
 
 
+## Process and Instructions - Infrastructure Creation and Configuration
 
-## Infrastructure Creation and Configuration
+* AWS "access key ID", "secret access key" for user with nessasary permissions
+* Prepare s3 bucket with neccessary permissions to act as Terraforms state bucket
 
 1. Simple command to see functionality of makefile
 ```shell
