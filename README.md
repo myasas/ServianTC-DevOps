@@ -41,7 +41,7 @@ Remember to create two files that define an environment within the folder "terra
 - backend.conf
 - default.tfvars
 
-Note: Here environment is considered as PreProd.
+Note: Here environment is considered as preprod.
 
 ### Common steps
 
@@ -50,24 +50,44 @@ To configure the infrastructure it is necessary to declare the environment varia
 ```bash
 export AWS_ACCESS_KEY_ID=
 export AWS_SECRET_ACCESS_KEY=
-export AWS_DEFAULT_REGION=us-east-1
-export ENVIRONMENT={dev|sit|preprod|prod|dr}
+export AWS_DEFAULT_REGION=ap-southeast-2
+export ENVIRONMENT=preprod
 ```
 
 Or you can also define an AWS Profile (https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) on your machine and use it:
 
 ```bash
-export AWS_DEFAULT_REGION=me-south-1
+export AWS_DEFAULT_REGION=ap-southeast-2
 export AWS_PROFILE=preprod
 export ENVIRONMENT=preprod
 ```
 
 ### Steps to follow if Make file process is chosen?
-When using Make file AWS_PROFILE parameter is not supported (At the moment...)
+**0. Create S3 Bucket**
+* With make file, you are given with facility of simply creating s3 bucket with required permissions and policy. You can additionally define following paramers at the beginning if s3 bucket creation is required.
 
-1. Simple command to see functionality of makefile
-```shell
-make
+```bash
+export AWS_ACC_ID=
+export AWS_S3_BUCKET=
+```
+
+```bash
+make init-s3
+```
+
+**0. Update dependancies**
+```bash
+make init
+```
+
+**0. Deploy of infrastructure**
+```bash
+make deploy
+```
+
+**0. Destroy of infrastructure**
+```bash
+make destroy
 ```
 
 ### Steps to follow if Terraform command process is chose?
@@ -88,6 +108,7 @@ terraform init -backend=true -backend-config=../envs/${ENVIRONMENT}/backend.conf
 
 
 ```bash
+cd terraform/infrastructure
 terraform plan -var-file="../envs/${ENVIRONMENT}/default.tfvars" -out=.terraform/terraform.tfplan
 terraform apply .terraform/terraform.tfplan
 ```
@@ -95,6 +116,7 @@ terraform apply .terraform/terraform.tfplan
 **1. Destroy of infrastructure**
 
 ```bash
+cd terraform/infrastructure
 terraform destroy -var-file="../envs/${ENVIRONMENT}/default.tfvars"
 ```
 
