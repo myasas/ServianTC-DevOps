@@ -40,25 +40,63 @@ Requirements to create a new environment are:
 Remember to create two files that define an environment within the folder "terraform/envs/#ENV#/".
 - backend.conf
 - default.tfvars
+
 Note: Here environment is considered as PreProd.
 
 ### Common steps
-* AWS "access key ID", "secret access key" for user with nessasary permissions
-* Prepare s3 bucket with neccessary permissions to act as Terraforms state bucket
 
-### Steps to follow if Terraform command process is chosen
-1. Simple command to see functionality of terraform core
-```shell
-terraform
+To configure the infrastructure it is necessary to declare the environment variables:
+
+```bash
+export AWS_ACCESS_KEY_ID=
+export AWS_SECRET_ACCESS_KEY=
+export AWS_DEFAULT_REGION=us-east-1
+export ENVIRONMENT={dev|sit|preprod|prod|dr}
+```
+
+Or you can also define an AWS Profile (https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) on your machine and use it:
+
+```bash
+export AWS_DEFAULT_REGION=me-south-1
+export AWS_PROFILE=preprod
+export ENVIRONMENT=preprod
 ```
 
 ### Steps to follow if Make file process is chosen?
+When using Make file AWS_PROFILE parameter is not supported (At the moment...)
 
 1. Simple command to see functionality of makefile
 ```shell
 make
 ```
 
+### Steps to follow if Terraform command process is chose?
+
+**1. Update dependancies**
+
+To update the dependencies and start the project execution, it is necessary to perform the following steps:
+
+```bash
+cd terraform/infrastructure
+rm -rf .terraform
+terraform get -update=true
+terraform init -backend=true -backend-config=../envs/${ENVIRONMENT}/backend.conf
+```
+**Note:** This step must always be done before deploying or destroying the infrastructure.
+
+**1. Deploy of infrastructure**
+
+
+```bash
+terraform plan -var-file="../envs/${ENVIRONMENT}/default.tfvars" -out=.terraform/terraform.tfplan
+terraform apply .terraform/terraform.tfplan
+```
+
+**1. Destroy of infrastructure**
+
+```bash
+terraform destroy -var-file="../envs/${ENVIRONMENT}/default.tfvars"
+```
 
 
 
