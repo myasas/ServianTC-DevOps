@@ -85,7 +85,7 @@ Date: 2020-09-09
 * Decided systems marked in Amber. 
 * Reasonings given with text highlighted in yellow.
 
-![Dicision Tree](https://drive.google.com/uc?export=view&id=1rIwPT1eiqitH_zlGjG48x0JhVPLbRKvu)
+![Dicision Tree](https://drive.google.com/uc?export=view&id=1HuJ2VeDUPYWcw1bbTTnTkn9LgqISUuCz)
 
 
 # 6. Finalize Architecture
