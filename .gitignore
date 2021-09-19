@@ -1,9 +1,1 @@
 # ServianTC-DevOps
-**/.terraform
-**/*.terraform.lock.hcl
-**/terraform.tfstate*
-**/.vagrant
-**/*.pem
-**/.idea
-**/credentials.txt
-**/mypolicy.json
