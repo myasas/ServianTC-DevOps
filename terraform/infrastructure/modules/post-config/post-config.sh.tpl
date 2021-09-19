@@ -201,8 +201,8 @@ metadata:
   name: servian-conf
 data:
   DbName: "postgres"
-  DbPort: ${app_backend_db_port}
-  DbHost: ${app_backend_db_host}
+  DbPort: "${app_backend_db_port}"
+  DbHost: "${app_backend_db_host}"
   ListenHost: "0.0.0.0"
   ListenPort: "3000"
 ---

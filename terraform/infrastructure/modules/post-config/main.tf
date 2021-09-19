@@ -57,7 +57,7 @@ resource "null_resource" "bastion" {
 
   # Copy helm chart values file for ALB ingress controller
   provisioner "file" {
-    source      = "conf/alb_ing_helm_values.yaml"
+    source      = "modules/post-config/conf/alb_ing_helm_values.yaml"
     destination = "alb_ing_helm_values.yaml"
   }
   
@@ -73,6 +73,12 @@ resource "null_resource" "bastion" {
       eks_k8s_masters_role_arn            = var.eks_k8s_masters_role_arn,
       eks_k8s_readonly_role_arn           = var.eks_k8s_readonly_role_arn,
       eks_arn_user_list_with_masters_user = var.eks_arn_user_list_with_masters_user
+
+      eks_alb_ing_ssl_cert_arn            = var.eks_alb_ing_ssl_cert_arn
+      app_backend_db_host                 = var.app_backend_db_host
+      app_backend_db_port                 = var.app_backend_db_port
+      app_backend_db_user                 = var.app_backend_db_user
+      app_backend_db_password             = var.app_backend_db_password
     })
     destination = "post-config.sh"
   }
