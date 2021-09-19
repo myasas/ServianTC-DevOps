@@ -85,8 +85,9 @@ resource "null_resource" "bastion" {
 
   provisioner "remote-exec" {
     inline = [
-      "sh post-config.sh",
-      "rm post-config.sh"
+      "sh post-config.sh"
+      # ,
+      # "rm post-config.sh"
     ]
   }
 
