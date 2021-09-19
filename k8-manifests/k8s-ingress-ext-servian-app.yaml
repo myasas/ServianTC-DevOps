@@ -1,0 +1,43 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: serviantc-ext-gws
+  namespace: default
+  annotations:
+    # TO - AUTO UPDATE FROM TERRAFORM
+    # alb.ingress.kubernetes.io/certificate-arn: >-
+    #   arn:aws:acm:ap-southeast-2:185922747583:certificate/807dc95e-bd99-4f75-be73-f77a0261f614
+    # Health Check Settings
+    alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
+    alb.ingress.kubernetes.io/healthcheck-port: "3000"
+    alb.ingress.kubernetes.io/healthcheck-path: /healthcheck/
+    alb.ingress.kubernetes.io/backend-protocol: HTTP
+
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/tags: >-
+      Type=NoManual,Client=Servian,Project=Servian-Test,Environment=preprod,App=serviantc-ext-gws
+    alb.ingress.kubernetes.io/target-type: ip
+    # external-dns.alpha.kubernetes.io/hostname: a1-ext-gws.atom.servian-Test.com
+    kubernetes.io/ingress.class: alb
+
+
+    # Security Settings -
+      # TODO - FUTURE ENHANCEMENT- WHITELIST IPS FROM ALB SECURITY GROUPS
+    # alb.ingress.kubernetes.io/inbound-cidrs: 10.227.245.60/32
+      # TODO - FUTURE ENHANCEMENT-BIND ALB TO A WAF FOR IMPROVED SECURITY
+    # alb.ingress.kubernetes.io/wafv2-acl-arn: arn:aws:wafv2:ap-southeast-2:176325838707:regional/webacl/waf-external-web-acl/e075cd0c-dac9-44c2-b9b0-4997a8d53832
+
+    # Logging
+      # TODO - FUTURE ENHANCEMENT-ENABLE ALB LOGGING AND STORE IN S3 BUCKET. ENABLE DELETE PROTECTION FOR ALB
+    # alb.ingress.kubernetes.io/load-balancer-attributes: access_logs.s3.enabled=true,access_logs.s3.bucket=preprod-servian-Test-alb-access-logs,routing.http.drop_invalid_header_fields.enabled=true,routing.http2.enabled=true,idle_timeout.timeout_seconds=60,deletion_protection.enabled=true
+
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: serviantc
+              servicePort: 3000
