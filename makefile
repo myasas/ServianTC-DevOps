@@ -45,9 +45,14 @@ init: assert_all
 	@cd "$(TF_DIR)" && terraform get -update=true
 	@cd "$(TF_DIR)" && terraform init -backend=true -backend-config=../envs/${ENVIRONMENT}/backend.conf
 
-single_try: assert_all
-	@echo "Running single TF module only..."
-	cd "$(TF_DIR)" && terraform plan -target module.bastion -var-file="../envs/${ENVIRONMENT}/default.tfvars" -out=.terraform/terraform.tfplan -destroy
+deploy_single: assert_all
+	@echo "Running Deploy on single TF module only..."
+	cd "$(TF_DIR)" && terraform plan -target module.post-config -var-file="../envs/${ENVIRONMENT}/default.tfvars" -out=.terraform/terraform.tfplan
+	cd "$(TF_DIR)" && terraform apply .terraform/terraform.tfplan
+	
+destroy_single: assert_all
+	@echo "Running Destroy on single TF module only..."
+	cd "$(TF_DIR)" && terraform plan -target module.post-config -var-file="../envs/${ENVIRONMENT}/default.tfvars" -out=.terraform/terraform.tfplan -destroy
 	cd "$(TF_DIR)" && terraform apply .terraform/terraform.tfplan
 
 deploy: assert_all
